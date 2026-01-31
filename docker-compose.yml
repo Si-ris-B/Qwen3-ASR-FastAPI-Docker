@@ -2,13 +2,15 @@ services:
   qwen3-asr:
     build: .
     container_name: qwen3_asr_api
+    # Port mapping: [Your PC Port] : [Internal Container Port]
     ports:
-      - "8000:8000"
+      - "${API_PORT}:8000"
     volumes:
-      - ./models:/app/models
-    environment:
-      - DEFAULT_MODEL=Qwen/Qwen3-ASR-0.6B
-      - DEFAULT_ALIGNER=Qwen/Qwen3-ForcedAligner-0.6B
+      # Volume mapping: [Your PC Folder] : [Internal Container Folder]
+      - "${HOST_MODELS_PATH}:/app/models"
+    # Load all variables into the container environment
+    env_file:
+      - .env
     deploy:
       resources:
         reservations:
@@ -16,3 +18,4 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    restart: unless-stopped

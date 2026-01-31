@@ -3,8 +3,12 @@ from typing import List, Optional
 
 class LoadModelRequest(BaseModel):
     model_id: str = "Qwen/Qwen3-ASR-0.6B"
-    precision: str = "bf16" # Options: bf16, fp16, fp32
+    device: str = "cuda"
+    dtype: str = "bf16"
     use_aligner: bool = True
+    attn_implementation: str = "sdpa"
+    max_inference_batch_size: int = 32
+    max_new_tokens: int = 512
 
 class SubtitleSegment(BaseModel):
     index: int
@@ -13,8 +17,8 @@ class SubtitleSegment(BaseModel):
     text: str
 
 class TranscriptionResponse(BaseModel):
-    text: str              # Full plain text
-    srt: str               # Formatted .srt string
-    language: str          # Detected language
-    duration: float        # Audio length in seconds
-    segments: List[SubtitleSegment] # Timestamped chunks
+    text: str
+    srt: Optional[str]
+    language: str
+    duration: float
+    segments: List[SubtitleSegment]
