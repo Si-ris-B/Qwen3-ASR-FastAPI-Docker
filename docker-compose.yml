@@ -1,0 +1,18 @@
+services:
+  qwen3-asr:
+    build: .
+    container_name: qwen3_asr_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    environment:
+      - DEFAULT_MODEL=Qwen/Qwen3-ASR-0.6B
+      - DEFAULT_ALIGNER=Qwen/Qwen3-ForcedAligner-0.6B
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
